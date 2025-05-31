@@ -8,8 +8,6 @@ binding = "SSO_STORE"
 id = "${KV_NAMESPACE_ID}"
 preview_id = "${KV_PREVIEW_NAMESPACE_ID}"
 
-[vars]
-ENVIRONMENT = "production"
 
 # D1 数据库配置，在实际部署时需要替换为你的D1数据库ID
 [[d1_databases]]
@@ -22,6 +20,7 @@ database_id = "${D1_DATABASE_ID}"
 JWT_SECRET = "" # 使用wrangler secret put JWT_SECRET "your-secret"设置
 COOKIE_SECRET = "" # 使用wrangler secret put COOKIE_SECRET "your-secret"设置
 SSO_DOMAIN = "${CF_PAGES_URL}" # 自动使用Cloudflare Pages URL
+ENVIRONMENT = "production"
 
 # 开发环境配置
 [env.development]
