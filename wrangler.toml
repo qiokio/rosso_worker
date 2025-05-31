@@ -31,7 +31,10 @@ COOKIE_SECRET = "dev-cookie-secret"
 SSO_DOMAIN = "localhost"
 
 # 路由配置，将API请求路由到Worker
-[routes]
-pattern = "/api/*"
-zone_name = "${CF_PAGES_URL}"
-script = "cloudflare-sso-worker"
+routes = [
+  { 
+    pattern = "/api/*",
+    script = "cloudflare-sso-worker",
+    zone_name = "${CF_PAGES_URL}"
+  }
+]
