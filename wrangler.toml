@@ -15,6 +15,10 @@ binding = "SSO_DB"
 database_name = "sso-db"
 database_id = "${D1_DATABASE_ID}"
 
+routes = [
+  { pattern = "/api/*", script = "cloudflare-sso-worker", zone_name = "${CF_PAGES_URL}" }
+]
+
 # 环境变量配置，在实际部署时通过Cloudflare Dashboard或wrangler secret设置
 [vars]
 JWT_SECRET = "" # 使用wrangler secret put JWT_SECRET "your-secret"设置
@@ -29,15 +33,6 @@ ENVIRONMENT = "development"
 JWT_SECRET = "dev-secret-key"
 COOKIE_SECRET = "dev-cookie-secret"
 SSO_DOMAIN = "localhost"
-
-# 路由配置，将API请求路由到Worker
-routes = [
-  {
-    pattern = "/api/*",
-    script = "cloudflare-sso-worker",
-    zone_name = "${CF_PAGES_URL}"
-  }
-]  
 
 # 禁用遥测
 send_metrics = false
