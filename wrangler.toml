@@ -2,6 +2,9 @@ name = "cloudflare-sso-worker"
 main = "src/index.ts"
 compatibility_date = "2023-06-15"
 
+# 添加Node.js兼容性标志
+compatibility_flags = ["nodejs_compat"]
+
 # 在实际部署时，需要替换为你的Cloudflare KV命名空间ID
 [[kv_namespaces]]
 binding = "SSO_STORE"
