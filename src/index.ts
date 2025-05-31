@@ -52,17 +52,8 @@ router.delete('/api/applications/:id', handleApplications.delete);
 // 404处理程序
 router.all('*', () => new Response('404 - 找不到资源', { status: 404 }));
 
-// 环境变量接口定义
-export interface Env {
-  JWT_SECRET: string;
-  COOKIE_SECRET: string;
-  SSO_DOMAIN: string;
-  SSO_STORE: KVNamespace;
-  DB: D1Database;
-  APPLICATIONS: KVNamespace;
-  SESSIONS: KVNamespace;
-  USERS: KVNamespace;
-}
+// 从类型定义文件导入环境变量接口
+import type { Env } from './types';
 
 // 主事件监听器
 export default {
