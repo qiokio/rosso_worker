@@ -1,0 +1,38 @@
+name = "cloudflare-sso-worker"
+main = "src/index.ts"
+compatibility_date = "2023-06-15"
+
+# 在实际部署时，需要替换为你的Cloudflare KV命名空间ID
+[[kv_namespaces]]
+binding = "SSO_STORE"
+id = "${KV_NAMESPACE_ID}"
+preview_id = "${KV_PREVIEW_NAMESPACE_ID}"
+
+[vars]
+ENVIRONMENT = "production"
+
+# D1 数据库配置，在实际部署时需要替换为你的D1数据库ID
+[[d1_databases]]
+binding = "SSO_DB"
+database_name = "sso-db"
+database_id = "${D1_DATABASE_ID}"
+
+# 环境变量配置，在实际部署时通过Cloudflare Dashboard或wrangler secret设置
+[vars]
+JWT_SECRET = "" # 使用wrangler secret put JWT_SECRET "your-secret"设置
+COOKIE_SECRET = "" # 使用wrangler secret put COOKIE_SECRET "your-secret"设置
+SSO_DOMAIN = "${CF_PAGES_URL}" # 自动使用Cloudflare Pages URL
+
+# 开发环境配置
+[env.development]
+[env.development.vars]
+ENVIRONMENT = "development"
+JWT_SECRET = "dev-secret-key"
+COOKIE_SECRET = "dev-cookie-secret"
+SSO_DOMAIN = "localhost"
+
+# 路由配置，将API请求路由到Worker
+[routes]
+pattern = "/api/*"
+zone_name = "${CF_PAGES_URL}"
+script = "cloudflare-sso-worker"
