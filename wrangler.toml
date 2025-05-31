@@ -8,14 +8,14 @@ compatibility_flags = ["nodejs_compat"]
 
 # D1数据库配置
 d1_databases = [
-  { binding = "DB", database_name = "SSO_DB", database_id = "your_database_id" }
+  { binding = "DB", database_name = "SSO_DB", database_id = "SSO_DB" }
 ]
 
 # Cloudflare KV命名空间配置
 [[kv_namespaces]]
 binding = "SSO_STORE"
-id = "your_kv_namespace_id"
-preview_id = "your_kv_preview_namespace_id"
+id = "SSO_STORE"
+preview_id = "SSO_STORE"
 
 
 

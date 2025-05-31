@@ -7,6 +7,7 @@ export interface ExtendedRequest extends IRequest {
 
 // 环境变量接口定义
 export interface Env {
+  AUTH_DOMAIN: string;
   JWT_SECRET: string;
   COOKIE_SECRET: string;
   SSO_DOMAIN: string;
