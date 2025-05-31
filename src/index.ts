@@ -56,9 +56,9 @@ router.all('*', () => new Response('404 - 找不到资源', { status: 404 }));
 export interface Env {
   JWT_SECRET: string;
   COOKIE_SECRET: string;
-  AUTH_DOMAIN: string;
+  SSO_DOMAIN: string;
   SSO_STORE: KVNamespace;
-  SSO_DB: D1Database;
+  DB: D1Database;
   APPLICATIONS: KVNamespace;
   SESSIONS: KVNamespace;
   USERS: KVNamespace;
