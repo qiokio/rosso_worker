@@ -32,9 +32,12 @@ SSO_DOMAIN = "localhost"
 
 # 路由配置，将API请求路由到Worker
 routes = [
-  { 
+  {
     pattern = "/api/*",
     script = "cloudflare-sso-worker",
     zone_name = "${CF_PAGES_URL}"
   }
-]
+]  
+
+# 禁用遥测
+send_metrics = false
