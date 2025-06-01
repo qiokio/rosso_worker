@@ -287,5 +287,145 @@ export const handleAuth = {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+  },
+  
+  // 用户注册
+  async register(request: ExtendedRequest): Promise<Response> {
+    try {
+      // 获取请求体
+      const { username, email, password } = await request.json() as { username: string, email: string, password: string };
+      
+      // 验证必填字段
+      if (!username || !email || !password) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: '用户名、邮箱和密码为必填项'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      // 验证邮箱格式
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (!emailRegex.test(email)) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: '邮箱格式不正确'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      // 检查邮箱是否已存在
+      const existingUser = await request.env.USERS.get(`user:${email}`);
+      if (existingUser) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: '该邮箱已被注册'
+        }), {
+          status: 409,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      // 哈希密码
+      const hashedPassword = await hashPassword(password);
+      
+      // 创建用户ID
+      const userId = crypto.randomUUID();
+      
+      // 创建用户对象
+      const user = {
+        id: userId,
+        email,
+        name: username,
+        password: hashedPassword,
+        role: 'user', // 默认角色为普通用户
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      // 存储用户信息到KV
+      await request.env.USERS.put(`user:${email}`, JSON.stringify(user));
+      
+      return new Response(JSON.stringify({
+        success: true,
+        message: '注册成功',
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        }
+      }), {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error('注册错误:', error);
+      return new Response(JSON.stringify({
+        success: false,
+        message: '注册过程中发生错误',
+        error: error instanceof Error ? error.message : String(error)
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  },
+  
+  // 忘记密码
+  async forgotPassword(request: ExtendedRequest): Promise<Response> {
+    try {
+      // 获取请求体
+      const { email } = await request.json() as { email: string };
+      
+      // 验证必填字段
+      if (!email) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: '邮箱为必填项'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      // 检查用户是否存在
+      const userJson = await request.env.USERS.get(`user:${email}`);
+      if (!userJson) {
+        // 为了安全考虑，即使用户不存在也返回成功
+        return new Response(JSON.stringify({
+          success: true,
+          message: '如果该邮箱已注册，重置密码链接将发送到您的邮箱'
+        }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      // 在实际应用中，这里应该生成重置令牌并发送邮件
+      // 由于这是一个示例，我们只返回成功消息
+      
+      return new Response(JSON.stringify({
+        success: true,
+        message: '如果该邮箱已注册，重置密码链接将发送到您的邮箱'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error('忘记密码错误:', error);
+      return new Response(JSON.stringify({
+        success: false,
+        message: '处理忘记密码请求时发生错误',
+        error: error instanceof Error ? error.message : String(error)
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
   }
 };

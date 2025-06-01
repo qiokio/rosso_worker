@@ -22,6 +22,8 @@ router.post('/api/auth/login', handleAuth.login);
 router.post('/api/auth/logout', handleAuth.logout);
 router.get('/api/auth/user', handleAuth.getCurrentUser);
 router.post('/api/auth/refresh', handleAuth.refreshToken);
+router.post('/api/auth/register', handleAuth.register);
+router.post('/api/auth/forgot-password', handleAuth.forgotPassword);
 
 // SAML 相关路由
 router.get('/api/auth/saml/metadata/:appId', handleSaml.metadata);
