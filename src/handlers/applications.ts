@@ -46,7 +46,7 @@ export const handleApplications = {
 
       return new Response(JSON.stringify({
         success: true,
-        data: filteredApps
+        applications: filteredApps
       }), {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -126,7 +126,7 @@ export const handleApplications = {
 
       return new Response(JSON.stringify({
         success: true,
-        data: newApp
+        application: newApp
       }), {
         status: 201,
         headers: { 'Content-Type': 'application/json' }
@@ -200,7 +200,7 @@ export const handleApplications = {
 
       return new Response(JSON.stringify({
         success: true,
-        data: appData
+        application: appData
       }), {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -257,8 +257,8 @@ export const handleApplications = {
       }
 
       // 从KV存储中获取应用
-      const existingApp = await request.env.APPLICATIONS.get(appId, 'json') as Application | null;
-      if (!existingApp) {
+      const appData = await request.env.APPLICATIONS.get(appId, 'json') as Application | null;
+      if (!appData) {
         return new Response(JSON.stringify({
           success: false,
           message: '应用不存在'
@@ -268,27 +268,22 @@ export const handleApplications = {
         });
       }
 
-      const data = await request.json() as any;
+      // 获取请求体
+      const updateData = await request.json() as Partial<Application>;
       
-      // 更新应用信息
-      const updatedApp: Application = {
-        ...existingApp,
-        name: data.name || existingApp.name,
-        description: data.description !== undefined ? data.description : existingApp.description,
-        type: existingApp.type, // 不允许更改应用类型
-        redirectUris: data.redirectUris || existingApp.redirectUris,
-        signingCert: data.signingCert !== undefined ? data.signingCert : existingApp.signingCert,
-        encryptCert: data.encryptCert !== undefined ? data.encryptCert : existingApp.encryptCert,
-        authorizedUsers: data.authorizedUsers || existingApp.authorizedUsers,
+      // 更新应用数据
+      const updatedApp = {
+        ...appData,
+        ...updateData,
         updatedAt: new Date().toISOString()
       };
 
       // 保存到KV存储
-      await request.env.APPLICATIONS.put(updatedApp.id, JSON.stringify(updatedApp));
+      await request.env.APPLICATIONS.put(appId, JSON.stringify(updatedApp));
 
       return new Response(JSON.stringify({
         success: true,
-        data: updatedApp
+        application: updatedApp
       }), {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -345,8 +340,8 @@ export const handleApplications = {
       }
 
       // 检查应用是否存在
-      const existingApp = await request.env.APPLICATIONS.get(appId, 'json');
-      if (!existingApp) {
+      const appExists = await request.env.APPLICATIONS.get(appId);
+      if (!appExists) {
         return new Response(JSON.stringify({
           success: false,
           message: '应用不存在'

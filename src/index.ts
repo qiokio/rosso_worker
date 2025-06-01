@@ -4,6 +4,7 @@ import { handleUsers } from './handlers/users';
 import { handleApplications } from './handlers/applications';
 import { handleSaml } from './handlers/saml';
 import { handleOidc } from './handlers/oidc';
+import { handleDashboard } from './handlers/dashboard';
 import { corsHeaders } from './utils/cors';
 import { ExtendedRequest } from './types';
 
@@ -50,6 +51,10 @@ router.post('/api/applications', handleApplications.create);
 router.get('/api/applications/:id', handleApplications.get);
 router.put('/api/applications/:id', handleApplications.update);
 router.delete('/api/applications/:id', handleApplications.delete);
+
+// 仪表盘路由
+router.get('/api/dashboard/stats', handleDashboard.getStats);
+router.get('/api/dashboard/activities', handleDashboard.getActivities);
 
 // 404处理程序
 router.all('*', () => new Response('404 - 找不到资源', { status: 404 }));
