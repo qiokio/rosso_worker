@@ -1,4 +1,4 @@
-name = "cloudflare-sso-worker"
+name = "rosso-worker"
 main = "src/index.ts"
 compatibility_date = "2024-09-23"
 
@@ -8,13 +8,13 @@ compatibility_flags = ["nodejs_compat"]
 
 # D1数据库配置
 d1_databases = [
-  { binding = "DB", database_name = "SSO_DB", database_id = "SSO_DB" }
+  { binding = "DB", database_name = "SSO_DB", database_id = "e14921f4-a19b-4ddb-8e4b-b251ed96f213" }
 ]
 
 # Cloudflare KV命名空间配置
 [[kv_namespaces]]
 binding = "SSO_STORE"
-id = "SSO_STORE"
+id = "85833268e8dc472a97aa0a1dd26130b3"
 preview_id = "SSO_STORE"
 
 
