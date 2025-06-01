@@ -26,6 +26,8 @@ routes = [
 
 # 环境变量配置，在实际部署时通过Cloudflare Dashboard或wrangler secret设置
 [vars]
+JWT_SECRET = "yHJRAvRJIKGIuhGLFhUtFAGxkNvxXa4Bfeom9bqFlqU=" # 使用wrangler secret put JWT_SECRET "your-secret"设置
+COOKIE_SECRET = "YyL4wwNGAOtz19Qe4oouU8mn2dWmGig+eco5ASCWnRk=" # 使用wrangler secret put COOKIE_SECRET "your-secret"设置
 SSO_DOMAIN = "sso.prooo.me" # 实际域名
 ENVIRONMENT = "production"
 
