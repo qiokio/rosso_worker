@@ -8,7 +8,7 @@ compatibility_flags = ["nodejs_compat"]
 
 # D1数据库配置
 d1_databases = [
-  { binding = "DB", database_name = "SSO_DB", database_id = "SSO_DB" }
+  { binding = "DB", database_name = "SSO_DB", database_id = "e14921f4-a19b-4ddb-8e4b-b251ed96f213" }
 ]
 
 # Cloudflare KV命名空间配置
