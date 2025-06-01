@@ -31,11 +31,11 @@ export const handleUsers = {
       }
       
       // 从KV存储中获取所有用户列表
-      const userKeys = await request.env.USERS.list({ prefix: 'user:' });
+      const userKeys = await request.env.SSO_STORE.list({ prefix: 'user:' });
       const users = [];
       
       for (const key of userKeys.keys) {
-        const userJson = await request.env.USERS.get(key.name);
+        const userJson = await request.env.SSO_STORE.get(key.name);
         if (userJson) {
           const user = JSON.parse(userJson);
           // 不返回密码
@@ -116,7 +116,7 @@ export const handleUsers = {
       }
       
       // 检查邮箱是否已存在
-      const existingUser = await request.env.USERS.get(`user:${email}`);
+      const existingUser = await request.env.SSO_STORE.get(`user:${email}`);
       if (existingUser) {
         return new Response(JSON.stringify({
           success: false,
@@ -143,7 +143,7 @@ export const handleUsers = {
       };
       
       // 存储用户信息到KV
-      await request.env.USERS.put(`user:${email}`, JSON.stringify(newUser));
+      await request.env.SSO_STORE.put(`user:${email}`, JSON.stringify(newUser));
       
       // 不返回密码
       const userResponse = { ...newUser } as Partial<User>;
@@ -199,11 +199,11 @@ export const handleUsers = {
       }
       
       // 从KV存储中获取所有用户
-      const userKeys = await request.env.USERS.list({ prefix: 'user:' });
+      const userKeys = await request.env.SSO_STORE.list({ prefix: 'user:' });
       let targetUser = null;
       
       for (const key of userKeys.keys) {
-        const userJson = await request.env.USERS.get(key.name);
+        const userJson = await request.env.SSO_STORE.get(key.name);
         if (userJson) {
           const user = JSON.parse(userJson);
           if (user.id === userId) {
@@ -286,12 +286,12 @@ export const handleUsers = {
       }
       
       // 从KV存储中获取所有用户
-      const userKeys = await request.env.USERS.list({ prefix: 'user:' });
+      const userKeys = await request.env.SSO_STORE.list({ prefix: 'user:' });
       let targetUser = null;
       let userEmail = null;
       
       for (const key of userKeys.keys) {
-        const userJson = await request.env.USERS.get(key.name);
+        const userJson = await request.env.SSO_STORE.get(key.name);
         if (userJson) {
           const user = JSON.parse(userJson);
           if (user.id === userId) {
@@ -351,7 +351,7 @@ export const handleUsers = {
       targetUser.updatedAt = new Date().toISOString();
       
       // 存储更新后的用户信息
-      await request.env.USERS.put(`user:${userEmail}`, JSON.stringify(targetUser));
+      await request.env.SSO_STORE.put(`user:${userEmail}`, JSON.stringify(targetUser));
       
       // 不返回密码
       const userResponse = { ...targetUser } as Partial<User>;
@@ -418,11 +418,11 @@ export const handleUsers = {
       }
       
       // 从KV存储中获取所有用户
-      const userKeys = await request.env.USERS.list({ prefix: 'user:' });
+      const userKeys = await request.env.SSO_STORE.list({ prefix: 'user:' });
       let userKeyToDelete = null;
       
       for (const key of userKeys.keys) {
-        const userJson = await request.env.USERS.get(key.name);
+        const userJson = await request.env.SSO_STORE.get(key.name);
         if (userJson) {
           const user = JSON.parse(userJson);
           if (user.id === userId) {
@@ -443,7 +443,7 @@ export const handleUsers = {
       }
       
       // 删除用户
-      await request.env.USERS.delete(userKeyToDelete);
+      await request.env.SSO_STORE.delete(userKeyToDelete);
       
       return new Response(JSON.stringify({
         success: true,

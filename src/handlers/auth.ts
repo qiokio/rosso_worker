@@ -22,7 +22,7 @@ export const handleAuth = {
       }
       
       // 从KV存储中获取用户信息
-      const userJson = await request.env.USERS.get(`user:${email}`);
+      const userJson = await request.env.SSO_STORE.get(`user:${email}`);
       
       if (!userJson) {
         return new Response(JSON.stringify({
@@ -69,7 +69,7 @@ export const handleAuth = {
       
       // 存储刷新令牌到会话存储
       const sessionId = crypto.randomUUID();
-      await request.env.SESSIONS.put(`session:${sessionId}`, JSON.stringify({
+      await request.env.SSO_STORE.put(`session:${sessionId}`, JSON.stringify({
         userId: user.id,
         email: user.email,
         refreshToken,
@@ -123,7 +123,7 @@ export const handleAuth = {
       
       if (sessionId) {
         // 从KV存储中删除会话
-        await request.env.SESSIONS.delete(`session:${sessionId}`);
+        await request.env.SSO_STORE.delete(`session:${sessionId}`);
       }
       
       // 创建响应
@@ -211,7 +211,7 @@ export const handleAuth = {
       }
       
       // 从KV存储中获取会话信息
-      const sessionJson = await request.env.SESSIONS.get(`session:${sessionId}`);
+      const sessionJson = await request.env.SSO_STORE.get(`session:${sessionId}`);
       
       if (!sessionJson) {
         return new Response(JSON.stringify({
@@ -230,7 +230,7 @@ export const handleAuth = {
         verifyJwt(session.refreshToken, request.env.JWT_SECRET);
       } catch (error) {
         // 删除无效会话
-        await request.env.SESSIONS.delete(`session:${sessionId}`);
+        await request.env.SSO_STORE.delete(`session:${sessionId}`);
         
         return new Response(JSON.stringify({
           success: false,
@@ -242,7 +242,7 @@ export const handleAuth = {
       }
       
       // 从KV存储中获取用户信息
-      const userJson = await request.env.USERS.get(`user:${session.email}`);
+      const userJson = await request.env.SSO_STORE.get(`user:${session.email}`);
       
       if (!userJson) {
         return new Response(JSON.stringify({
@@ -319,7 +319,7 @@ export const handleAuth = {
       }
       
       // 检查邮箱是否已存在
-      const existingUser = await request.env.USERS.get(`user:${email}`);
+      const existingUser = await request.env.SSO_STORE.get(`user:${email}`);
       if (existingUser) {
         return new Response(JSON.stringify({
           success: false,
@@ -348,7 +348,7 @@ export const handleAuth = {
       };
       
       // 存储用户信息到KV
-      await request.env.USERS.put(`user:${email}`, JSON.stringify(user));
+      await request.env.SSO_STORE.put(`user:${email}`, JSON.stringify(user));
       
       return new Response(JSON.stringify({
         success: true,
@@ -394,7 +394,7 @@ export const handleAuth = {
       }
       
       // 检查用户是否存在
-      const userJson = await request.env.USERS.get(`user:${email}`);
+      const userJson = await request.env.SSO_STORE.get(`user:${email}`);
       if (!userJson) {
         // 为了安全考虑，即使用户不存在也返回成功
         return new Response(JSON.stringify({
