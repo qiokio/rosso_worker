@@ -5,7 +5,6 @@ compatibility_date = "2024-09-23"
 # 添加Node.js兼容性标志
 compatibility_flags = ["nodejs_compat"]
 
-
 # D1数据库配置
 d1_databases = [
   { binding = "DB", database_name = "SSO_DB", database_id = "e14921f4-a19b-4ddb-8e4b-b251ed96f213" }
@@ -17,11 +16,14 @@ binding = "SSO_STORE"
 id = "85833268e8dc472a97aa0a1dd26130b3"
 preview_id = "SSO_STORE"
 
+[[kv_namespaces]]
+binding = "APPLICATIONS"
+id = "db9d8c52cf124152974bdcb5166567c9"
+preview_id = "APPLICATIONS"
 
-
-# Routes配置
+# Routes配置 - 正确位置
 routes = [
-  { pattern = "/api/*", script = "cloudflare-sso-worker", zone_name = "sso.prooo.me" }
+  { pattern = "/api/*", zone_name = "sso.prooo.me" }
 ]
 
 # 环境变量配置，在实际部署时通过Cloudflare Dashboard或wrangler secret设置
